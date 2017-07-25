@@ -1,2 +1,2 @@
 # MemesBot
-My First
+My First Discord Bot
