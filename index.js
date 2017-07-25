@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const token = require('./settings.json').token;
 const client = new Discord.Client();
 var Member;
 var Guild;
@@ -42,13 +41,6 @@ client.on('messageDelete', function(message) {
         serverLog.send(`${message.author.username} sent ${message} @ ${message.createdAt} in ${message.channel.name}`);
     }
 });
-
-const clean = text => {
-  if (typeof(text) === "string")
-    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-  else
-      return text;
-}
 
 client.on('message', function(message) {
     if (message.author.bot) return;
@@ -129,4 +121,4 @@ client.on('message', function(message) {
 
 });
 
-client.login(token);
+client.login(process.env.token);
