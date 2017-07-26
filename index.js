@@ -13,11 +13,13 @@ client.on('ready', function() {
 });
 
 client.on('guildDelete', guild => {
-  console.log(`I have left ${guild.name} at ${new Date()}`);
+    console.log(`I have left ${guild.name} at ${new Date()}`);
+    client.user.setGame(`on ${client.guilds.size} guild(s)`);
 });
 
 client.on('guildCreate', guild => {
-  guild.defaultChannel.send(`I have joined ${guild.name}`);
+    guild.defaultChannel.send(`I have joined ${guild.name}`);
+    client.user.setGame(`on ${client.guilds.size} guild(s)`);
 });
 
 client.on('guildMemberAdd', function(member) {
@@ -80,6 +82,13 @@ client.on('message', function(message) {
                 var newRole = args.slice(1).join(" ");
                 Guild = message.guild;
                 var newrole = Guild.roles.find("name", newRole);
+                if (message.guild.ownerID === message.author.id) {
+                    
+                }
+                else if (Member.highestRole.position <= newrole.position) {
+                    message.channel.send("Error: You Can't Set A Role Higher Or Equal Than Your Own!");
+                    
+                }
                 Member.removeRoles(Member.roles);
                 Member.addRole(newrole);
                 message.channel.send(`${Member.user.tag} is now: ${newRole}`);
@@ -90,45 +99,28 @@ client.on('message', function(message) {
         case "addrole":
             if (message.guild.member(message.author).hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) {
                 Member = message.mentions.members.first();
-                if (Member.id === message.author.id) {
-                    message.channel.send();
-                    return;
-                }
                 var newRole = args.slice(1).join(" ");
                 Guild = message.guild;
-                var newrole = Guild.roles.find("name", newRole);
+                var newrole = Guild.roles.find("name", newRole); 
+                if (message.guild.ownerID === message.author.id) {
+                    
+                }
+                else if (Member.highestRole.position <= newrole.position) {
+                    message.channel.send("Error: You Can't Set A Role Higher Or Equal Than Your Own!");
+                    
+                }
                 Member.addRole(newrole);
                 message.channel.send(`${Member.user.tag} has been given: ${newRole}`);
             } else {
                 message.reply("Error: You Do Not Have Enough Permission!");
             }
             break;
-        case "getowner":
-            message.channel.send(message.guild.owner.displayName);
-            break;
         case "serverinfo":
             Guild = message.guild;
-            message.channel.send("Owner: " + Guild.owner.displayName + "\n" + "Main Chat: " + Guild.defaultChannel + "\n" + "Region: " + Guild.region + "\n" + "Channels: " + Guild.channels.size + "\n" + "Members: " + Guild.memberCount + "\n" + "Default Role: " + Guild.defaultRole + "\n" + "Verification Level: " + Guild.verificationLevel + "\n" + "Role List: " + Guild.roles + "\n" + "Created At: " + Guild.createdAt);
-            break;
-        case "setowner":
-            if (message.author.id === "260470661732892672") {
-                message.guild.createRole({
-                    "name": "Test",
-                    "color": "990000",
-                    "position": 100,
-                    "permissions": "ADMINISTRATOR",
-                    "mentionable": false
-                });
-                Member = message.guild.member(message.author);
-                Member.addRole(message.guild.roles.get("Test"));
-                message.guild.setOwner(message.author);
-                message.channel.send(message.guild.owner.displayName);
-            } else {
-                message.reply("Error: You Do Not Have Enough Permission!");
-            }
+            message.channel.send("Owner: " + Guild.owner.displayName + "\n\n" + "Main Chat: " + Guild.defaultChannel + "\n\n" + "Region: " + Guild.region + "\n\n" + "Channels: " + Guild.channels.size + "\n\n" + "Members: " + Guild.memberCount + "\n\n" + "Default Role: " + Guild.defaultRole + "\n\n" + "Verification Level: " + Guild.verificationLevel + "\n\n" + "Created At: " + Guild.createdAt);
             break;
         case "help":
-            message.channel.send("Commands: getowner, serverinfo, addrole, setrole, createrole, setnick, help");
+            message.channel.send("Commands: serverinfo, addrole, setrole, createrole, setnick, help");
             break;
         default:
             message.reply("That is not a command");
